@@ -9,3 +9,5 @@ assertsilent test_func.act test_max
 assertsilent test_func.act test_min
 assertsilent test_func.act test_repeat "cycle"
 assertsilent test_func.act test_sign_extend "cycle"
+assertsilent test_func.act test_rol "cycle"
+assertsilent test_func.act test_ror "cycle"

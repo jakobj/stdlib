@@ -75,7 +75,6 @@ defproc test_repeat() {
 
 defproc dut_sign_extend (chan?(int<3>) in; chan!(int<4>) out) {
     int<3> x;
-    int<4> y;
     chp {
     *[ in?x; out!std::bit::sign_extend<3, 4>(x) ]
     }
@@ -87,6 +86,37 @@ defproc test_sign_extend() {
     sim::source_seq<3, false, 6, {0,1,2,4,5,6}> src;
     check_sink<6, {0, 1, 2, 12, 13, 14}, 4> snk;
     dut_sign_extend dut;
+    dut.in = src.O;
+    snk.I = dut.out;
+}
+
+defproc dut_rol (chan?(int<3>) in; chan!(int<3>) out) {
+    int<3> x;
+    chp {
+        *[ in?x; out!std::bit::rol<3>(x) ]
+    }
+}
+
+defproc test_rol() {
+    sim::source_seq<3, false, 6, {0,1,2,4,5,6}> src;
+    check_sink<6, {0, 2, 4, 1, 3, 5}, 3> snk;
+    dut_rol dut;
+    dut.in = src.O;
+    snk.I = dut.out;
+}
+
+defproc dut_ror (chan?(int<3>) in; chan!(int<3>) out) {
+    int<3> x;
+    int<3> y;
+    chp {
+    *[ in?x; out!std::bit::ror<3>(x) ]
+    }
+}
+
+defproc test_ror() {
+    sim::source_seq<3, false, 6, {0,1,2,4,5,6}> src;
+    check_sink<6, {0, 4, 1, 2, 6, 3}, 3> snk;
+    dut_ror dut;
     dut.in = src.O;
     snk.I = dut.out;
 }
