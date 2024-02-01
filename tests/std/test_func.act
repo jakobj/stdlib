@@ -120,3 +120,32 @@ defproc test_ror() {
     dut.in = src.O;
     snk.I = dut.out;
 }
+
+template<pint W; pint N; pint taps[N]>
+defproc dut_fib_lfsr (chan!(int<W>) out) {
+    int<W> state;
+    int period;
+    chp {
+      period := 0;
+      state := 4;
+      *[ period = 0 | state != 4 -> state := std::fib_lfsr<W, N, taps>(state); period := period + 1 ];
+      out!period
+    }
+}
+
+defproc test_fib_lsfr() {
+    // uses some polynomials from here
+    // https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs
+    // to test for correct period
+    check_sink<1, {7}, 3> snk0;
+    dut_fib_lfsr<3, 2, {0, 1}> dut0;
+    snk0.I = dut0.out;
+
+    check_sink<1, {15}, 4> snk1;
+    dut_fib_lfsr<4, 2, {0, 1}> dut1;
+    snk1.I = dut1.out;
+
+    check_sink<1, {255}, 8> snk2;
+    dut_fib_lfsr<8, 4, {0, 2, 3, 4}> dut2;
+    snk2.I = dut2.out;
+}
