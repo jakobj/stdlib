@@ -1,6 +1,35 @@
-defproc test_pow() {
-    bool a;
+import sim; // import simulation namespace
+
+template<pint N; pint data[N]; pint W>
+defproc check_sink(chan?(int<W>) I)
+{
+  int<W> x, y;
+  int i;
+  chp {
+    *[ i := 0;
+       *[ i < N -> I?x;
+                   [([]k:N: i=k -> y:= data[k];
+                                   [ x = y -> skip
+                                     [] else -> log ("ASSERTION failed, value mismatch; expected: ", y, "%x (0x", y, "); got: ", x, "%x (0x", x, ")")
+                                   ]
+                   )];
+                   i := i + 1
+        ]
+     ]
+  }
+}
+
+defproc adder(chan?(int) A, B; chan!(int) C)
+{
+    int a, b;
     chp {
-        a := false
+        *[ A?a, B?b; C!(a+b) ]
     }
+}
+
+defproc test_adder() {
+    adder dut;
+    sim::source_seq<32, false, 3, {3,5,2}> s1(dut.A);
+    sim::source_seq<32, false, 3, {7,9,3}> s2(dut.B);
+    check_sink<3, {10, 14, 5}, 32> sx(dut.C);
 }
