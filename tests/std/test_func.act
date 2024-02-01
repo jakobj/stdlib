@@ -1,4 +1,5 @@
-import sim; // import simulation namespace
+import sim;
+import std;
 
 template<pint N; pint data[N]; pint W>
 defproc check_sink(chan?(int<W>) I)
@@ -32,4 +33,10 @@ defproc test_adder() {
     sim::source_seq<32, false, 3, {3,5,2}> s1(dut.A);
     sim::source_seq<32, false, 3, {7,9,3}> s2(dut.B);
     check_sink<3, {10, 14, 5}, 32> sx(dut.C);
+}
+
+defproc test_pow() {
+    (i:9: {std::pow(i, 1) = i};)
+    (i:9: {std::pow(i, 2) = i*i};)
+    (i:9: {std::pow(i, 3) = i*i*i};)
 }
