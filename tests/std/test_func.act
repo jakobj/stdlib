@@ -40,3 +40,20 @@ defproc test_pow() {
     (i:9: {std::pow(i, 2) = i*i};)
     (i:9: {std::pow(i, 3) = i*i*i};)
 }
+
+defproc test_ceil_log2() {
+    {std::ceil_log2(1) = 0};
+    {std::ceil_log2(3) = 2};
+    {std::ceil_log2(5) = 3};
+    (i:9: {std::ceil_log2(std::pow(2, i)) = i};)
+}
+
+defproc test_max() {
+    (i:9: {std::max(i, 10) = 10};)
+    (i:9: {std::max(i, 0) = i};)
+}
+
+defproc test_min() {
+    (i:9: {std::min(i, 10) = i};)
+    (i:9: {std::min(i, 0) = 0};)
+}
