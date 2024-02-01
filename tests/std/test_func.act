@@ -24,7 +24,7 @@ defproc adder(chan?(int) A, B; chan!(int) C)
 {
     int a, b;
     chp {
-        *[ A?a, B?b; C!(a+b) ]
+      *[ A?a, B?b; C!(a+b) ]
     }
 }
 
@@ -56,4 +56,37 @@ defproc test_max() {
 defproc test_min() {
     (i:9: {std::min(i, 10) = i};)
     (i:9: {std::min(i, 0) = 0};)
+}
+
+defproc dut_repeat (chan?(int<2>) in; chan!(int<4>) out) {
+    int<2> x;
+    chp {
+      *[ in?x; out!std::bit::repeat<2, 2>(x) ]
+    }
+}
+
+defproc test_repeat() {
+    sim::source_seq<2, false, 3, {0,1,2}> src;
+    check_sink<3, {0, 5, 10}, 4> snk;
+    dut_repeat dut;
+    dut.in = src.O;
+    snk.I = dut.out;
+}
+
+defproc dut_sign_extend (chan?(int<3>) in; chan!(int<4>) out) {
+    int<3> x;
+    int<4> y;
+    chp {
+    *[ in?x; out!std::bit::sign_extend<3, 4>(x) ]
+    }
+}
+
+defproc test_sign_extend() {
+    // first set of three numbers tests whether zeros are correctly extended,
+    // second set tests same for leading ones
+    sim::source_seq<3, false, 6, {0,1,2,4,5,6}> src;
+    check_sink<6, {0, 1, 2, 12, 13, 14}, 4> snk;
+    dut_sign_extend dut;
+    dut.in = src.O;
+    snk.I = dut.out;
 }
