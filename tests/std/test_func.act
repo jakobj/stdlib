@@ -1,0 +1,6 @@
+defproc test_pow() {
+    bool a;
+    chp {
+        a := false
+    }
+}
