@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 green='\e[0;32m'
 reset='\033[0m'
