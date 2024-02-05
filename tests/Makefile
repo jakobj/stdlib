@@ -1,4 +1,8 @@
 SHELL:=/usr/bin/env bash
+VERBOSE:=0
+
+export VERBOSE=$VERBOSE
+
 all: testfunc testfxp
 
 testfunc:

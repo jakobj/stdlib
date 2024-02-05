@@ -11,10 +11,12 @@ assertsilent () {
     result=$(echo "$command" | actsim -Wlang_subst:off "$filename" "$process" 2>&1)
     length=${#result}
     if [ $length = 0 ]; then
-        echo "${green}[passed]${reset} $filename $process"
+        if [ $VERBOSE = 1 ]; then
+            echo -e "${green}[passed]${reset} $filename $process"
+        fi
         return 0
     else
-        echo "${red}[failed]${reset} $filename $process:\n$result"
+        echo -e ${red}[failed]${reset} $filename $process:\n$result
         return 1
     fi
 }
