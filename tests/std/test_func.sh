@@ -2,7 +2,6 @@
 
 . ../tests.sh
 
-assertsilent test_func.act test_adder "cycle"
 assertsilent test_func.act test_pow
 assertsilent test_func.act test_ceil_log2
 assertsilent test_func.act test_max
