@@ -1,0 +1,55 @@
+import sim;
+import std;
+import math;
+
+function assert(bool result) : int {
+    chp {
+        [ result -> skip
+          [] else -> log ("ASSERTION failed; expected: true; got: false")
+        ]
+    }
+}
+
+function asserteq(int result, expected) : int {
+    chp {
+        [ result = expected -> skip
+          [] else -> log ("ASSERTION failed, value mismatch; expected: ", expected, "%x (0x", expected, "); got: ", result, "%x (0x", result, ")")
+        ]
+    }
+}
+
+defproc test_conv_to_fxp() {
+    int x;
+    int _;
+    chp {
+        x := math::fxp::conv_to_fxp( 3, 3, 2.1873 );
+        _ := asserteq(x, 17);
+        x := math::fxp::conv_to_fxp( 3, 3, 2.1875 );
+        _ := asserteq(x, 18);
+        x := math::fxp::conv_to_fxp( 3, 3, 3.1875 );
+        _ := asserteq(x, 26)
+        // TODO also check negative numbers
+    }
+}
+
+defproc test_positive() {
+    int x;
+    int _;
+    chp {
+        x := math::fxp::conv_to_fxp(3, 3, 3.1415);
+        _ := assert(math::fxp::positive<3, 3>(x));
+        x := math::fxp::conv_to_fxp(3, 3, 0.1);
+        _ := assert(math::fxp::positive<3, 3>(x))
+    }
+}
+
+defproc test_negative() {
+    int x;
+    int _;
+    chp {
+        x := math::fxp::conv_to_fxp(3, 3, -3.1415);
+        _ := assert(math::fxp::negative<3, 3>(x));
+        x := math::fxp::conv_to_fxp(3, 3, -0.1);
+        _ := assert(math::fxp::negative<3, 3>(x))
+    }
+}
